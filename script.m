@@ -25,7 +25,7 @@ end
 % Loading Test Data
 testX = loadMNISTImages('data/t10k-images.idx3-ubyte')';
 testy = loadMNISTLabels('data/t10k-labels.idx1-ubyte');
-testY = zeros(size(y,1), num_labels);
+testY = zeros(size(testy,1), num_labels);
 for i = 1:size(testY,1)
 	testY(i, testy(i)+1) = 1;
 end
