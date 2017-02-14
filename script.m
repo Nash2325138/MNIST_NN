@@ -65,9 +65,9 @@ total_iteration = 1500;
 nn_params = initial_nn_params;
 learning_rate = 0.5;
 
-costs = zeros(total_iteration);
-acc_trains = zeros(total_iteration);
-acc_tests = zeros(total_iteration);
+costs = zeros(1, total_iteration);
+acc_trains = zeros(1, total_iteration);
+acc_tests = zeros(1, total_iteration);
 for iter = 1:total_iteration
 	[cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
 	fprintf('iteration: %3d, cost: %f, ', iter, cost);
