@@ -41,9 +41,10 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 
+lambda = 1;
 fprintf('\nChecking gradient and initial_cost.\n');
 % checkNNGradients;
-initial_cost = nnCostFunction(initial_nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, 0)
+initial_cost = nnCostFunction(initial_nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda)
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
@@ -52,7 +53,6 @@ fprintf('\nTraining Neural Network normal gradient decend... \n');
 total_iteration = 15;
 nn_params = initial_nn_params;
 learning_rate = 0.04;
-lambda = 1;
 costs = zeros(total_iteration);
 for iter = 1:total_iteration
   [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
