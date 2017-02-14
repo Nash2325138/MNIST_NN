@@ -3,9 +3,10 @@ clear ; close all; clc; warning off;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 28 * 28;  % 28x28 Input Images of Digits
-hidden_layer1_size = 50;
+hidden_layer1_size = 30;
 hidden_layer2_size = 20;
 num_labels = 10;          % 10 labels, from 0 to 9
+lambda = 0.5;
 
 % Load Training Data
 fprintf('Loading and Visualizing Data ...\n')
@@ -20,6 +21,7 @@ for i = 1:size(Y,1)
   Y(i, y(i)+1) = 1;
 end
 
+if 0
 % Randomly select 100 datas to display
 sel = randperm(size(X, 1));
 sel = sel(1:100);
@@ -28,7 +30,7 @@ displayData(X(sel, :));
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
-
+end
 
 fprintf('\nInitializing Neural Network Parameters ...\n')
 initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer1_size);
@@ -37,22 +39,22 @@ initial_Theta3 = randInitializeWeights(hidden_layer2_size, num_labels);
 
 % Unroll parameters
 initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:) ; initial_Theta3(:)];
+
+if 0
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
-
-lambda = 1;
 fprintf('\nChecking gradient and initial_cost.\n');
 % checkNNGradients;
 initial_cost = nnCostFunction(initial_nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda)
 fprintf('Program paused. Press enter to continue.\n');
 pause;
-
+end
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
 total_iteration = 15;
 nn_params = initial_nn_params;
-learning_rate = 0.04;
+learning_rate = 0.08;
 costs = zeros(total_iteration);
 for iter = 1:total_iteration
   [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
@@ -75,7 +77,7 @@ Theta3 = reshape(nn_params((1 + end2):end), ...
                  num_labels, (hidden_layer2_size + 1));
 
 save('paras.mat', 'input_layer_size', 'hidden_layer1_size', 'hidden_layer2_size', ...
-	 'num_labels', 'nn_params', 'costs');
+	 'num_labels', 'nn_params', 'costs', 'total_iteration', 'lambda', 'learning_rate');
 
 plot(1:total_iteration, costs);
 
@@ -110,4 +112,4 @@ pause;
 
 
 pred = predict(Theta1, Theta2, Theta3, X);
-fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y+1)) * 100);
+fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == (y+1))) * 100);
