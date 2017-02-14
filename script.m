@@ -3,8 +3,8 @@ clear ; close all; clc; warning off;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 28 * 28;  % 28x28 Input Images of Digits
-hidden_layer1_size = 30;
-hidden_layer2_size = 20;
+hidden_layer1_size = 300;
+hidden_layer2_size = 100;
 num_labels = 10;          % 10 labels, from 0 to 9
 lambda = 0.5;
 
