@@ -96,31 +96,6 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 
-% fprintf('\nTraining Neural Network with fmincg... \n')
-% options = optimset('MaxIter', 50);
-
-% lambda = 1;
-% costFunction = @(p) nnCostFunction(p, ...
-%                                    input_layer_size, ...
-%                                    hidden_layer_size, ...
-%                                    num_labels, X, y, lambda);
-% [nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
-
-% end1 = hidden_layer1_size * (input_layer_size + 1);
-% end2 = end1 + hidden_layer2_size * (hidden_layer1_size + 1);
-
-% Theta1 = reshape(nn_params(1:end1), ...
-%                  hidden_layer1_size, (input_layer_size + 1));
-
-% Theta2 = reshape(nn_params((1 + end1):end2), ...
-%                  hidden_layer2_size, (hidden_layer1_size + 1));
-
-% Theta3 = reshape(nn_params((1 + end2):end), ...
-%                  num_labels, (hidden_layer2_size + 1));
-
-% fprintf('Program paused. Press enter to continue.\n');
-% pause;
-
 [Theta1, Theta2, Theta3] = restoreTheta(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels);
 pred_train = predict(Theta1, Theta2, Theta3, X);
 pred_test = predict(Theta1, Theta2, Theta3, testX);
