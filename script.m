@@ -3,7 +3,8 @@ clear ; close all; clc; warning off;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 28 * 28;  % 28x28 Input Images of Digits
-hidden_layer_size = 100;   % 25 hidden units
+hidden_layer1_size = 100;   % 25 hidden units
+hidden_layer2_size = 50;
 num_labels = 10;          % 10 labels, from 0 to 9
 
 % Load Training Data
@@ -30,39 +31,46 @@ pause;
 
 
 fprintf('\nInitializing Neural Network Parameters ...\n')
-initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
-initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
+initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer1_size);
+initial_Theta2 = randInitializeWeights(hidden_layer1_size, hidden_layer2_size);
+initial_Theta3 = randInitializeWeights(hidden_layer2_size, num_labels);
 
 % Unroll parameters
-initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
+initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:) ; initial_Theta3(:)];
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 
 fprintf('\nChecking gradient and initial_cost.\n');
 % checkNNGradients;
-initial_cost = nnCostFunction(initial_nn_params, input_layer_size, hidden_layer_size, num_labels, X, Y, 0)
+initial_cost = nnCostFunction(initial_nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, 0)
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
-total_iteration = 300;
+total_iteration = 200;
 nn_params = initial_nn_params;
 learning_rate = 0.04;
 lambda = 1;
 for iter = 1:total_iteration
-  [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, Y, lambda);
-  fprintf('iteration: %-3d, cost: %f\n', iter, cost);
+  [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
+  fprintf('iteration: %3d, cost: %f\n', iter, cost);
   fflush(stdout);
   nn_params -= learning_rate .* grad;
 end
 
-Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-                 hidden_layer_size, (input_layer_size + 1));
+end1 = hidden_layer1_size * (input_layer_size + 1);
+end2 = end1 + hidden_layer2_size * (hidden_layer1_size + 1);
 
-Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
-                 num_labels, (hidden_layer_size + 1));
+Theta1 = reshape(nn_params(1:end1), ...
+                 hidden_layer1_size, (input_layer_size + 1));
+
+Theta2 = reshape(nn_params((1 + end1):end2), ...
+                 hidden_layer2_size, (hidden_layer1_size + 1));
+
+Theta3 = reshape(nn_params((1 + end2):end), ...
+                 num_labels, (hidden_layer2_size + 1));
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
