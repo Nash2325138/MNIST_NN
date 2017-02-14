@@ -61,9 +61,9 @@ pause;
 end
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
-total_iteration = 50;
+total_iteration = 1500;
 nn_params = initial_nn_params;
-learning_rate = 0.3;
+learning_rate = 0.5;
 
 costs = zeros(total_iteration);
 acc_trains = zeros(total_iteration);
