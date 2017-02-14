@@ -3,7 +3,7 @@ clear ; close all; clc; warning off;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 28 * 28;  % 28x28 Input Images of Digits
-hidden_layer_size = 25;   % 25 hidden units
+hidden_layer_size = 100;   % 25 hidden units
 num_labels = 10;          % 10 labels, from 0 to 9
 
 % Load Training Data
@@ -46,7 +46,7 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 
-fprintf('\nnTraining Neural Network normal gradient decend... \n');
+fprintf('\nTraining Neural Network normal gradient decend... \n');
 total_iteration = 300;
 nn_params = initial_nn_params;
 learning_rate = 0.04;
