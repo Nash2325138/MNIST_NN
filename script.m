@@ -13,6 +13,8 @@ fprintf('Loading and Visualizing Data ...\n')
 
 X = loadMNISTImages('data/train-images-idx3-ubyte')';
 y = loadMNISTLabels('data/train-labels.idx1-ubyte');
+X = X(1:10000, :);
+y = y(1:10000, :);
 m = size(X, 1);
 
 % Trasform Y from 0~9 to logical vector
@@ -52,29 +54,24 @@ pause;
 end
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
-total_iteration = 15;
+total_iteration = 1500;
 nn_params = initial_nn_params;
-learning_rate = 0.08;
+learning_rate = 0.3;
 costs = zeros(total_iteration);
 for iter = 1:total_iteration
-  [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
-  fprintf('iteration: %3d, cost: %f\n', iter, cost);
-  fflush(stdout);
-  nn_params -= learning_rate .* grad;
-  costs(iter) = cost;
+	[cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
+	fprintf('iteration: %3d, cost: %f, ', iter, cost);
+	nn_params -= learning_rate .* grad;
+	costs(iter) = cost;
+
+	[Theta1, Theta2, Theta3] = restoreTheta(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels);
+	pred = predict(Theta1, Theta2, Theta3, X);
+	fprintf('Accuracy: %f\n', mean(double(pred == (y+1))) * 100);
+
+	fflush(stdout);
 end
 
-end1 = hidden_layer1_size * (input_layer_size + 1);
-end2 = end1 + hidden_layer2_size * (hidden_layer1_size + 1);
-
-Theta1 = reshape(nn_params(1:end1), ...
-                 hidden_layer1_size, (input_layer_size + 1));
-
-Theta2 = reshape(nn_params((1 + end1):end2), ...
-                 hidden_layer2_size, (hidden_layer1_size + 1));
-
-Theta3 = reshape(nn_params((1 + end2):end), ...
-                 num_labels, (hidden_layer2_size + 1));
+[Theta1, Theta2, Theta3] = restoreTheta(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels);
 
 save('paras.mat', 'input_layer_size', 'hidden_layer1_size', 'hidden_layer2_size', ...
 	 'num_labels', 'nn_params', 'costs', 'total_iteration', 'lambda', 'learning_rate');
