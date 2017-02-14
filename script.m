@@ -3,8 +3,8 @@ clear ; close all; clc; warning off;
 
 %% Setup the parameters you will use for this exercise
 input_layer_size  = 28 * 28;  % 28x28 Input Images of Digits
-hidden_layer1_size = 100;   % 25 hidden units
-hidden_layer2_size = 50;
+hidden_layer1_size = 50;
+hidden_layer2_size = 20;
 num_labels = 10;          % 10 labels, from 0 to 9
 
 % Load Training Data
@@ -49,15 +49,17 @@ pause;
 
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
-total_iteration = 200;
+total_iteration = 15;
 nn_params = initial_nn_params;
 learning_rate = 0.04;
 lambda = 1;
+costs = zeros(total_iteration);
 for iter = 1:total_iteration
   [cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
   fprintf('iteration: %3d, cost: %f\n', iter, cost);
   fflush(stdout);
   nn_params -= learning_rate .* grad;
+  costs(iter) = cost;
 end
 
 end1 = hidden_layer1_size * (input_layer_size + 1);
@@ -71,6 +73,11 @@ Theta2 = reshape(nn_params((1 + end1):end2), ...
 
 Theta3 = reshape(nn_params((1 + end2):end), ...
                  num_labels, (hidden_layer2_size + 1));
+
+save('paras.mat', 'input_layer_size', 'hidden_layer1_size', 'hidden_layer2_size', ...
+	 'num_labels', 'nn_params', 'costs');
+
+plot(1:total_iteration, costs);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -86,16 +93,21 @@ pause;
 %                                    num_labels, X, y, lambda);
 % [nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
 
-% Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-%                  hidden_layer_size, (input_layer_size + 1));
+% end1 = hidden_layer1_size * (input_layer_size + 1);
+% end2 = end1 + hidden_layer2_size * (hidden_layer1_size + 1);
 
-% Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
-%                  num_labels, (hidden_layer_size + 1));
+% Theta1 = reshape(nn_params(1:end1), ...
+%                  hidden_layer1_size, (input_layer_size + 1));
+
+% Theta2 = reshape(nn_params((1 + end1):end2), ...
+%                  hidden_layer2_size, (hidden_layer1_size + 1));
+
+% Theta3 = reshape(nn_params((1 + end2):end), ...
+%                  num_labels, (hidden_layer2_size + 1));
 
 % fprintf('Program paused. Press enter to continue.\n');
 % pause;
 
 
-
-pred = predict(Theta1, Theta2, X);
+pred = predict(Theta1, Theta2, Theta3, X);
 fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y+1)) * 100);
