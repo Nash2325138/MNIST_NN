@@ -61,10 +61,13 @@ pause;
 end
 
 fprintf('\nTraining Neural Network normal gradient decend... \n');
-total_iteration = 1500;
+total_iteration = 50;
 nn_params = initial_nn_params;
 learning_rate = 0.3;
+
 costs = zeros(total_iteration);
+acc_trains = zeros(total_iteration);
+acc_tests = zeros(total_iteration);
 for iter = 1:total_iteration
 	[cost, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels, X, Y, lambda);
 	fprintf('iteration: %3d, cost: %f, ', iter, cost);
@@ -74,17 +77,20 @@ for iter = 1:total_iteration
 	[Theta1, Theta2, Theta3] = restoreTheta(nn_params, input_layer_size, hidden_layer1_size, hidden_layer2_size, num_labels);
 	pred_train = predict(Theta1, Theta2, Theta3, X);
 	pred_test = predict(Theta1, Theta2, Theta3, testX);
-	accuracy_train = mean(double(pred_train == (y+1))) * 100;
-	accuracy_test = mean(double(pred_test == (testy+1))) * 100;
-	fprintf('accuracy(train, test): %f, %f\n', accuracy_train, accuracy_test);
+	acc_trains(iter) = mean(double(pred_train == (y+1))) * 100;
+	acc_tests(iter) = mean(double(pred_test == (testy+1))) * 100;
+	fprintf('accuracy(train, test): %f, %f\n', acc_trains(iter), acc_tests(iter));
 
 	fflush(stdout);
 end
 
 save('paras.mat', 'input_layer_size', 'hidden_layer1_size', 'hidden_layer2_size', ...
-	 'num_labels', 'nn_params', 'costs', 'total_iteration', 'lambda', 'learning_rate');
+	 'num_labels', 'nn_params', 'costs', 'total_iteration', 'lambda', 'learning_rate', ...
+	 'acc_trains', 'acc_tests');
 
 plot(1:total_iteration, costs);
+plot(1:total_iteration, acc_trains);
+plot(1:total_iteration, acc_tests);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
